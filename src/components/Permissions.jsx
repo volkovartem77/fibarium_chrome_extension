@@ -1,5 +1,5 @@
 import React from "react";
-import {Container, Grid, Switch, Typography} from "@material-ui/core";
+import {Box, Button, Container, Grid, Switch, Typography} from "@material-ui/core";
 import {getKey, getPermShortName} from "../utils";
 
 
@@ -41,7 +41,7 @@ function PermissionItem(props) {
 }
 
 export function Permissions(props) {
-    const { classes, perms, handleChangeSwitch } = props;
+    const { classes, perms, perm_list, handleChangeSwitch, handleAcceptButtonClick } = props;
 
     return (
             <Container maxWidth="md" className={classes.root_container}>
@@ -61,6 +61,19 @@ export function Permissions(props) {
                             />
                         ))
                 }
+                <Grid item xs={12} className={classes.information_buttons}>
+                    <div className={classes.button}>
+                        <Box display="flex" justifyContent="flex-start">
+                            <Button
+                                style={{minWidth: 232}}
+                                size="large"
+                                variant="outlined"
+                                onClick={() => {handleAcceptButtonClick(perms, perm_list)}}>
+                                Accept
+                            </Button>
+                        </Box>
+                    </div>
+                </Grid>
             </Container>
         );
 }

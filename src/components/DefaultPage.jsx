@@ -2,15 +2,18 @@ import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import {Box, Button, Container, Grid, Typography} from "@material-ui/core";
+import {Box, Button, Container, Grid} from "@material-ui/core";
 import {MyTextFieldSmall} from "../utils";
 import {
+    fetchPermList, fetchPermListSuccess, setAcceptSuccess,
     setLoginStatus,
     setPassword,
-    setPerm
+    setPerm, setWeb3Status
 } from "../store/default_page/actions";
 import {LockOpen} from "@material-ui/icons";
 import {Permissions} from "./Permissions";
+import {Information} from "./Information";
+import {SuccessPage} from "./SuccessPage";
 
 
 const styles = {
@@ -19,16 +22,16 @@ const styles = {
         maxWidth: 300,
         minHeight: 500,
         maxHeight: 500,
-        marginTop: 35,
+        // marginTop: 15,
         // textAlign: "center",
-        backgroundColor: 'gray'
+        // backgroundColor: 'gray'
     },
     root_container: {
         marginLeft: 0,
     },
     logo_img: {
-        margin: 20,
-        marginLeft: 10,
+        // marginTop: 0,
+        marginLeft: 25,
         float: "left",
     },
     logo_text: {
@@ -36,6 +39,7 @@ const styles = {
         float: "left",
         fontSize: 34,
         fontFamily: "BlinkMacSystemFont",
+        fontWeight: 1,
         color: "rgba(77,82,89,0.76)"
     },
     password_field: {
@@ -55,6 +59,21 @@ const styles = {
         color: "rgba(68,72,75,0.75)",
         fontSize: 18,
         fontWeight: 1,
+    },
+
+    information_buttons: {
+        marginTop: 20,
+    },
+    success_page_container: {
+        paddingTop: 30,
+        marginLeft: 25,
+    },
+    success_page_text: {
+        margin: 50,
+        marginTop: 40,
+        marginLeft: 55,
+        fontSize: 24,
+        color: "rgba(77,82,89,0.76)"
     }
 }
 
@@ -71,10 +90,7 @@ function Logo(props) {
     return (
         <div>
             <div className={classes.logo_img}>
-                <img src={require('../logo.png')} alt="web3cat" width="64" height="64" />
-            </div>
-            <div className={classes.logo_text}>
-                <Typography variant="h4">Web3Cat</Typography>
+                <img src={require('../images/fibarium.png')} alt="web3cat" width="200" height="200" />
             </div>
         </div>
     )
@@ -102,7 +118,7 @@ function LoginPage(props) {
                             variant="contained"
                             size="small"
                             onClick={() => {
-                                handleUnlockButtonClick()
+                                handleUnlockButtonClick(password)
                             }}
                         >
                             <LockOpen/>
@@ -122,59 +138,109 @@ class DefaultPage extends React.Component {
         this.props = props;
     }
 
+    // Todo REMOVE
+    componentDidMount() {
+        let levan_json = {
+            "profile": "W3siayI6InR3aXR0ZXIiLCJ2IjoiQHRvbSJ9LHsiayI6ImRpc2NvcmQiLCJ2IjoiQHRvbS1kaXNjb3Jk" +
+                "In0seyJrIjoiaW5zdGFncmFtIiwidiI6IkB0b20taW5zdGFtYWZpYSJ9LHsiayI6ImJhYiIsInYiOnRydWV9LHs" +
+                "iayI6ImJuYl9hY3Rpdml0eSIsInYiOnRydWV9LHsiayI6InBvbHlnb25fYWN0aXZpdHkiLCJ2Ijp0cnVlfV0="
+        }
+        this.props.fetchPermListSuccess(levan_json)
+    }
+
     handleChangePassword = (password) => {
         this.props.setPassword(password);
     }
 
     render() {
-        const {classes, password, login_status, perms} = this.props;
+        const {classes, password, login_status, web3status, accept_success, perms, perm_list} = this.props;
 
-        const handleUnlockButtonClick = () => {
-            this.props.setLoginStatus(true);
+        const handleUnlockButtonClick = (password) => {
+            if (password === "balonka1") {
+                this.props.setLoginStatus(true);
+            }
         }
 
         const handleChangeSwitch = (name, value) => {
             this.props.setPerm(name, value);
         }
 
-        // console.log(window)
-        // TODO window
-        //  взять переменную/маркер сайта из window. Типа window.web3cat
+        const handleSettingsButtonClick = () => {
+            this.props.setWeb3Status(true);
+        }
 
-        // TODO: html/js Injection (передать туда фильтрованный perm_list)
-        // alert('sdfdsfsd')
-        console.log('chrome', chrome.tabs)
+        const handleLogoutButtonClick = () => {
+            this.props.setWeb3Status(false);
+            this.props.setLoginStatus(false);
+        }
+
+        const getHtml = (filtered_perm_list) => {
+            let result = "<div>"
+            filtered_perm_list.forEach(function(d){
+                result += "<h6>" + d.k.toString() + ": " + d.v.toString() + "</h6>"
+            })
+            result += "</div>"
+            return result
+        }
+
+        const htmlInjection = (filtered_perm_list) => {
+            let html = getHtml(filtered_perm_list);
+            chrome.tabs.executeScript({
+                code: 'document.getElementById("connect-wallet_web3").insertAdjacentHTML("afterend", "' + html + '")'
+            })
+        }
+
+        const handleAcceptButtonClick = (perms, perm_list) => {
+            let filtered_perm_list = []
+
+            perm_list.forEach(function(d) {
+                if (d.k in perms) {
+                    if (perms[d.k]) {
+                        filtered_perm_list.push(d)
+                    }
+                }
+            });
+            htmlInjection(filtered_perm_list)
+            this.props.setAcceptSuccess(true)
+        }
+
+        const check_web3_allowed = (results) => {
+            if (results[0] === "true") {
+                this.props.setWeb3Status(true);
+            }
+        }
+
+        chrome.tabs.executeScript({
+            code: 'document.getElementById("connect-wallet_web3").textContent'
+        }, check_web3_allowed)
+
 
         return (
             <div className={classes.root}>
-                {/*{chrome.tabs.getCurrent(function(tab) {<div>{tab.title}</div>})}*/}
-                {/*{chrome.tabs.query({*/}
-                {/*    active: true,*/}
-                {/*    lastFocusedWindow: true*/}
-                {/*}, function(tabs) {*/}
-                {/*    // and use that tab to fill in out title and url*/}
-                {/*    var tab = tabs[0];*/}
-                {/*    console.log(tab.url);*/}
-                {/*    alert(tab.url);*/}
-                {/*})}*/}
-
-                {login_status?
+                {web3status?accept_success?
+                    <SuccessPage
+                        classes={classes}
+                    />:
                     <Permissions
                         classes={classes}
                         perms={perms}
+                        perm_list={perm_list}
                         handleChangeSwitch={handleChangeSwitch}
-                    />
-                    :<LoginPage
-                        classes={classes}
-                        password={password}
-                        handleChangePassword={this.handleChangePassword}
-                        handleUnlockButtonClick={handleUnlockButtonClick}
-                    />
+                        handleAcceptButtonClick={handleAcceptButtonClick}
+                    />:login_status?
+                        <Information
+                            classes={classes}
+                            perm_list={perm_list}
+                            handleSettingsButtonClick={handleSettingsButtonClick}
+                            handleLogoutButtonClick={handleLogoutButtonClick}
+                        />
+                        :<LoginPage
+                            classes={classes}
+                            password={password}
+                            handleChangePassword={this.handleChangePassword}
+                            handleUnlockButtonClick={handleUnlockButtonClick}
+                        />
                 }
-                {/*<Information*/}
-                {/*    classes={classes}*/}
-                {/*    perm_list={perm_list}*/}
-                {/*/>*/}
             </div>
         );
     }
@@ -184,6 +250,8 @@ const putStateToProps = (state) => {
     return {
         password: state.default_page.password,
         login_status: state.default_page.login_status,
+        web3status: state.default_page.web3status,
+        accept_success: state.default_page.accept_success,
 
         perm_list: state.default_page.perm_list,
         perms: state.default_page.perms,
@@ -195,6 +263,12 @@ const putActionsToProps = (dispatch) => {
         setPassword: bindActionCreators(setPassword, dispatch),
         setLoginStatus: bindActionCreators(setLoginStatus, dispatch),
         setPerm: bindActionCreators(setPerm, dispatch),
+        setWeb3Status: bindActionCreators(setWeb3Status, dispatch),
+        setAcceptSuccess: bindActionCreators(setAcceptSuccess, dispatch),
+        fetchPermList: bindActionCreators(fetchPermList, dispatch),
+
+        // Todo REMOVE
+        fetchPermListSuccess: bindActionCreators(fetchPermListSuccess, dispatch)
     };
 };
 

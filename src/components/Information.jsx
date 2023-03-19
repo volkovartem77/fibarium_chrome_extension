@@ -1,5 +1,5 @@
 import React from "react";
-import {Container, Grid, Typography} from "@material-ui/core";
+import {Box, Button, Container, Grid, Typography} from "@material-ui/core";
 import {getKey, getPermName} from "../utils";
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 
@@ -20,7 +20,7 @@ function PermItem(props) {
 }
 
 export function Information (props) {
-    const { classes, perm_list } = props;
+    const { classes, perm_list, handleSettingsButtonClick, handleLogoutButtonClick } = props;
 
     return (
         <Container maxWidth="md" className={classes.root_container}>
@@ -35,7 +35,30 @@ export function Information (props) {
                         <PermItem classes={classes} k={d.k} v={d.v} key={getKey()}/>
                     )
                 })}
-
+                <Grid item xs={6} className={classes.information_buttons}>
+                    <div className={classes.button}>
+                        <Box display="flex" justifyContent="flex-end">
+                            <Button
+                                size="large"
+                                variant="outlined"
+                                onClick={() => {handleSettingsButtonClick()}}>
+                                Settings
+                            </Button>
+                        </Box>
+                    </div>
+                </Grid>
+                <Grid item xs={6} className={classes.information_buttons}>
+                    <div className={classes.button}>
+                        <Box display="flex" justifyContent="flex-start">
+                            <Button
+                                size="large"
+                                variant="outlined"
+                                onClick={() => {handleLogoutButtonClick()}}>
+                                Logout
+                            </Button>
+                        </Box>
+                    </div>
+                </Grid>
             </Grid>
         </Container>
     );

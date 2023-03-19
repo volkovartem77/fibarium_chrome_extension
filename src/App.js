@@ -18,3 +18,11 @@ function App() {
 }
 
 export default App;
+
+
+// "content_scripts": [
+//     {
+//         "matches": ["http://*/*", "https://*/*"],
+//         "js": ["./static/js/main.js"]
+//     }
+// ],

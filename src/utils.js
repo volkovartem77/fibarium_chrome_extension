@@ -13,6 +13,14 @@ export function getPermName(key) {
             return "Binance Account Bound";
         case "twitter":
             return "Twitter";
+        case "discord":
+            return "Discord";
+        case "instagram":
+            return "Instagram";
+        case "bnb_activity":
+            return "BNB Chain Activity";
+        case "polygon_activity":
+            return "Polygon Activity";
         default:
             return "Unknown";
     }
@@ -27,6 +35,14 @@ export function getPermShortName(key) {
             return "BAB";
         case "twitter":
             return "Twitter";
+        case "discord":
+            return "Discord";
+        case "instagram":
+            return "Instagram";
+        case "bnb_activity":
+            return "BNB Chain";
+        case "polygon_activity":
+            return "Polygon";
         default:
             return "Unknown";
     }

@@ -23,43 +23,49 @@ export function Information (props) {
     const { classes, perm_list, handleSettingsButtonClick, handleLogoutButtonClick } = props;
 
     return (
-        <Container maxWidth="md" className={classes.root_container}>
-            <Grid item xs={12}>
-                <Typography variant="h4" className={classes.page_header_text}>
-                    Information
-                </Typography>
-            </Grid>
-            <Grid container spacing={1}>
-                {perm_list.map(function(d){
-                    return (
-                        <PermItem classes={classes} k={d.k} v={d.v} key={getKey()}/>
-                    )
-                })}
-                <Grid item xs={6} className={classes.information_buttons}>
-                    <div className={classes.button}>
-                        <Box display="flex" justifyContent="flex-end">
-                            <Button
-                                size="large"
-                                variant="outlined"
-                                onClick={() => {handleSettingsButtonClick()}}>
-                                Settings
-                            </Button>
-                        </Box>
-                    </div>
+        <div>
+            <Container maxWidth="md" className={classes.root_container}>
+                <Grid item xs={12}>
+                    <Typography variant="h4" className={classes.page_header_text}>
+                        Information
+                    </Typography>
                 </Grid>
-                <Grid item xs={6} className={classes.information_buttons}>
-                    <div className={classes.button}>
-                        <Box display="flex" justifyContent="flex-start">
-                            <Button
-                                size="large"
-                                variant="outlined"
-                                onClick={() => {handleLogoutButtonClick()}}>
-                                Logout
-                            </Button>
-                        </Box>
-                    </div>
+                <Grid container spacing={1}>
+                    {perm_list.map(function(d){
+                        return (
+                            <PermItem classes={classes} k={d.k} v={d.v} key={getKey()}/>
+                        )
+                    })}
                 </Grid>
-            </Grid>
-        </Container>
+            </Container>
+            <Container maxWidth="md" className={classes.root_container_buttons}>
+                <Grid container spacing={1}>
+                    <Grid item xs={6} className={classes.information_buttons}>
+                        <div className={classes.button}>
+                            <Box display="flex" justifyContent="flex-end">
+                                <Button
+                                    size="large"
+                                    variant="outlined"
+                                    onClick={() => {handleSettingsButtonClick()}}>
+                                    Settings
+                                </Button>
+                            </Box>
+                        </div>
+                    </Grid>
+                    <Grid item xs={6} className={classes.information_buttons}>
+                        <div className={classes.button}>
+                            <Box display="flex" justifyContent="flex-start">
+                                <Button
+                                    size="large"
+                                    variant="outlined"
+                                    onClick={() => {handleLogoutButtonClick()}}>
+                                    Logout
+                                </Button>
+                            </Box>
+                        </div>
+                    </Grid>
+                </Grid>
+            </Container>
+        </div>
     );
 }

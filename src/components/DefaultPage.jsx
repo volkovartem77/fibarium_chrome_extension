@@ -20,14 +20,23 @@ const styles = {
     root: {
         minWidth: 300,
         maxWidth: 300,
-        minHeight: 500,
-        maxHeight: 500,
-        // marginTop: 15,
-        // textAlign: "center",
+        minHeight: 460,
+        maxHeight: 460,
         // backgroundColor: 'gray'
     },
     root_container: {
-        marginLeft: 0,
+        marginLeft: 20,
+        minHeight: 400,
+    },
+    root_container_login: {
+        marginLeft: 10,
+        minHeight: 400,
+    },
+    root_container_button: {
+        marginLeft: 20,
+    },
+    root_container_buttons: {
+        marginLeft: 5,
     },
     logo_img: {
         // marginTop: 0,
@@ -62,11 +71,14 @@ const styles = {
     },
 
     information_buttons: {
-        marginTop: 20,
+        marginTop: 0,
+    },
+    accept_button: {
+        marginTop: 0,
     },
     success_page_container: {
         paddingTop: 30,
-        marginLeft: 25,
+        marginLeft: 35,
     },
     success_page_text: {
         margin: 50,
@@ -100,7 +112,7 @@ function LoginPage(props) {
     const {classes, password, handleChangePassword, handleUnlockButtonClick} = props;
 
     return (
-        <Container maxWidth="md" className={classes.root_container}>
+        <Container maxWidth="md" className={classes.root_container_login}>
             <Grid item xs={12}>
                 <Logo classes={classes}/>
             </Grid>
@@ -210,9 +222,8 @@ class DefaultPage extends React.Component {
             }
         }
 
-        chrome.tabs.executeScript({
-            code: 'document.getElementById("connect-wallet_web3").textContent'
-        }, check_web3_allowed)
+        chrome.tabs.executeScript({code: 'document.getElementById("connect-wallet_web3").textContent'},
+            check_web3_allowed)
 
 
         return (

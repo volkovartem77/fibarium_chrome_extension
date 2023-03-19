@@ -44,36 +44,40 @@ export function Permissions(props) {
     const { classes, perms, perm_list, handleChangeSwitch, handleAcceptButtonClick } = props;
 
     return (
-            <Container maxWidth="md" className={classes.root_container}>
-                <Grid item xs={12}>
-                    <Typography variant="h4" className={classes.page_header_text}>
-                        Permissions
-                    </Typography>
-                </Grid>
-                {
-                    Object.entries(perms).map(
-                        ( [key, value] ) => (
-                            <PermissionItem
-                                name={key}
-                                value={value}
-                                handleChangeSwitch={handleChangeSwitch}
-                                key={getKey()}
-                            />
-                        ))
-                }
-                <Grid item xs={12} className={classes.information_buttons}>
-                    <div className={classes.button}>
-                        <Box display="flex" justifyContent="flex-start">
-                            <Button
-                                style={{minWidth: 232}}
-                                size="large"
-                                variant="outlined"
-                                onClick={() => {handleAcceptButtonClick(perms, perm_list)}}>
-                                Accept
-                            </Button>
-                        </Box>
-                    </div>
-                </Grid>
-            </Container>
+            <div>
+                <Container maxWidth="md" className={classes.root_container}>
+                    <Grid item xs={12}>
+                        <Typography variant="h4" className={classes.page_header_text}>
+                            Permissions
+                        </Typography>
+                    </Grid>
+                    {
+                        Object.entries(perms).map(
+                            ( [key, value] ) => (
+                                <PermissionItem
+                                    name={key}
+                                    value={value}
+                                    handleChangeSwitch={handleChangeSwitch}
+                                    key={getKey()}
+                                />
+                            ))
+                    }
+                </Container>
+                <Container maxWidth="md" className={classes.root_container_button}>
+                    <Grid item xs={12} className={classes.accept_button}>
+                        <div className={classes.button}>
+                            <Box display="flex" justifyContent="flex-start">
+                                <Button
+                                    style={{minWidth: 232}}
+                                    size="large"
+                                    variant="outlined"
+                                    onClick={() => {handleAcceptButtonClick(perms, perm_list)}}>
+                                    Accept
+                                </Button>
+                            </Box>
+                        </div>
+                    </Grid>
+                </Container>
+            </div>
         );
 }
